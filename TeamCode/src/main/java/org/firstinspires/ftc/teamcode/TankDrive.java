@@ -78,7 +78,7 @@ public final class TankDrive {
         public double kA = 0.00001;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 25;
+        public double maxWheelVel = 35;
         public double minProfileAccel = -30;
         public double maxProfileAccel = 50;
 
@@ -87,7 +87,7 @@ public final class TankDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double ramseteZeta = 0.9; // in the range (0, 1)
+        public double ramseteZeta = 0.8; // in the range (0, 1)
         public double ramseteBBar = 2.0; // positive
 
         // turn controller gains
