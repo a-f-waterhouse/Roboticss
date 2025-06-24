@@ -47,7 +47,6 @@ public class NO_LIMITS extends LinearOpMode {
         int[]  servoPos = {30,-30};
         int[] armPos = {480,5};
         int[] armRotatePos = {-1350, -5}; //out in
-        int s = 0;
         boolean close = false;
         double arm_rotate_power = 0;
 

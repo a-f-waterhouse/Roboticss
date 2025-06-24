@@ -97,13 +97,45 @@ public class RRTest extends LinearOpMode
 
         public class ArmExtend implements Action
         {
+            private boolean init = false;
+
             @Override
-            public boolean run(@NonNull TelemetryPacket packet){ return false;} //!! TODO add functionality extend
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!init) {
+                    extendMotor.setPower(0.7); // TODO
+                    init = true;
+                }
+                double pos = extendMotor.getCurrentPosition();
+                packet.put("Extension", pos);
+
+                if (pos < Extensions[0]) {
+                    return true;
+                } else {
+                    extendMotor.setPower(0);
+                    return false;
+                }
+            }
         }
         public class ArmRetract implements Action
         {
+            private boolean init = false;
+
             @Override
-            public boolean run(@NonNull TelemetryPacket packet){ return false;} // TODO add functionality retract
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!init) {
+                    extendMotor.setPower(-0.7); // TODO
+                    init = true;
+                }
+                double pos = extendMotor.getCurrentPosition();
+                packet.put("Extension", pos);
+
+                if (pos < Extensions[1]) {
+                    return true;
+                } else {
+                    extendMotor.setPower(0);
+                    return false;
+                }
+            }
         }
 
         public Action armUp()
@@ -172,17 +204,14 @@ public class RRTest extends LinearOpMode
     {
         Pose2d initialPos = new Pose2d(9, -63, Math.toRadians(90));
         TankDrive drive = new TankDrive(hardwareMap, initialPos);
-        /* Claw claw = new Claw(hardwareMap);
-        Arm arm = new Arm(hardwareMap);*/
+        Claw claw = new Claw(hardwareMap);
+        Arm arm = new Arm(hardwareMap);
 
         //init trajectory stuffs
         TrajectoryActionBuilder tabTest = drive.actionBuilder(initialPos)
                 .lineToY(-39)
-                .lineToY(-49)
-                .splineTo(new Vector2d(36,-24), Math.toRadians(70))
-                .splineTo(new Vector2d(43,-12), Math.toRadians(90))
-                .lineToY(-47)
-                .splineTo(new Vector2d(9,-39),Math.toRadians(90));
+                .turn(Math.toRadians(180));
+        Action trajectory = tabTest.build();
 
         telemetry.addData("Starting Position", initialPos);
         telemetry.update();
@@ -204,7 +233,7 @@ public class RRTest extends LinearOpMode
 
 
 
-        /*Action trajectory = tabTest.build();
+        /*
         Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
